@@ -35,11 +35,11 @@ runs:
         $context = Get-AzContext
         if ("${{ inputs.resource-url }}" -ne "")
         {
-          $resource = (Get-AzAccessToken -ResourceUrl ${{ inputs.resource-url }} -DefaultProfile $context
+          $resource = Get-AzAccessToken -ResourceUrl ${{ inputs.resource-url }} -DefaultProfile $context
         }
         else
         {
-          $resource = (Get-AzAccessToken -ResourceTypeName ${{ inputs.resource-type-name }} -DefaultProfile $context
+          $resource = Get-AzAccessToken -ResourceTypeName ${{ inputs.resource-type-name }} -DefaultProfile $context
         }
 
         $resourceToken = $resource.Token
