@@ -1,0 +1,47 @@
+name: azure-resource-login
+description: 'Gets an Access Token for an specific Azure resource'
+
+inputs:
+  creds:
+    description: 'Azure credentials for the service principal to log in'
+    required: true
+  resource-url:
+    description: 'Canonical resource url for what you want the token for'
+    required: false
+    default: ''
+  resource-type-name:
+    description: 'Optional resouce type name, supported values: AadGraph, AnalysisServices, Arm, Attestation, Batch, DataLake, KeyVault, OperationalInsights, ResourceManager, Storage, Synapse. Default value is Arm if not specified.'
+    required: false
+    default: 'Arm'
+outputs:
+  token:
+    description: "Authentication Token"
+    value: ${{ steps.adquire-token.outputs.token }}
+runs:
+  using: "composite"
+  steps:
+    - name: Logining in into Azure
+      uses: Azure/login@v1
+      with:
+        creds: ${{ inputs.creds }}
+        enable-AzPSSession: true
+    - id: adquire-token
+      name: Adquiring access token
+      shell: pwsh
+      run: |
+        Set-PSRepository PSGallery -InstallationPolicy Trusted
+        Install-Module -Name Az.Accounts -AllowClobber
+
+        $context = Get-AzContext
+        if ("${{ inputs.resource-url }}" -ne "")
+        {
+          $resource = (Get-AzAccessToken -ResourceUrl ${{ inputs.resource-url }} -DefaultProfile $context
+        }
+        else
+        {
+          $resource = (Get-AzAccessToken -ResourceTypeName ${{ inputs.resource-type-name }} -DefaultProfile $context
+        }
+
+        $resourceToken = $resource.Token
+        write-host "::debug::Setting 'token' variable to $resourceToken"
+        write-host "::set-output name=token::$resourceToken"

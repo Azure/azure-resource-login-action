@@ -1,14 +1,66 @@
-# Project
+# Get Azure Resource Token Action
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+Get raw access token for an specific type of resource in Azure. 
 
-As the maintainer of this project, please make a few updates:
+## When to use it
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+Use `azure-resource-login` for intereacting with Azure components on behalf of an Azure Service Principal when an authentication token is required. You can use the authentication token to use any Azure API, dependening on the resource type you selected.
+
+## Getting Started
+
+### Prerequisites
+
+- A Service Principal created in the tenant.
+- The Client ID, Client Secret and Tenant ID associated with the indicated service principal.
+
+### Inputs
+
+| Name | Description | Required |
+| --- | --- | --- |
+| `creds` | The Azure Active Directory Service Principal credentials to be used in the login process. This information has to be provided in the form of a JSON string [as indicated in this example](https://github.com/marketplace/actions/azure-login#configure-deployment-credentials). You can use <nobr>`${{ secrets.AZURE_CREDENTIALS }}`</nobr> to store the credentials in a secret named `AZURE_CREDENTIALS`. | true |
+| <nobr>`resource-url`</nobr> | Canonical resource url for what you want the token for. | false |
+| <nobr>`resource-type-name`</nobr> | Optional resouce type name, supported values: AadGraph, AnalysisServices, Arm, Attestation, Batch, DataLake, KeyVault, OperationalInsights, ResourceManager, Storage, Synapse. Default value is Arm if not specified. | false |
+
+### Example usage
+
+#### Get an access token for a Azure SQL Database, Azure Synapse Analytics or Azure SQL MI
+
+```
+id: sql-login
+name: Adquiring SQL Access Token
+uses: Azure/azure-resource-login-action@v1.0.0
+with:
+    creds: ${{ secrets.AZURE_CREDENTIALS }}
+    resource-url: "https://database.windows.net"
+```
+
+> You can use the generated token later as `${{ steps.sql-login.outputs.token }}`
+
+#### Get an access token for managing an Azure Resource
+
+```
+id: mgnt-login
+name: Adquiring Azure Resource Management Access Token
+uses: Azure/azure-resource-login-action@v1.0.0
+with:
+    creds: ${{ secrets.AZURE_CREDENTIALS }}
+    resource-url: "https://management.core.windows.net/"
+```
+
+> You can use the generated token later as `${{ steps.mgnt-login.outputs.token }}`
+
+#### Get raw access token for AAD graph
+
+```
+id: aadgraph-login
+name: Adquiring AAD graph Access Token
+uses: Azure/azure-resource-login-action@v1.0.0
+with:
+    creds: ${{ secrets.AZURE_CREDENTIALS }}
+    resource-type-name: AadGraph
+```
+
+> You can use the generated token later as `${{ steps.aadgraph-login.outputs.token }}`
 
 ## Contributing
 
