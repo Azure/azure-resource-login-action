@@ -18,7 +18,7 @@ Use `azure-resource-login` for intereacting with Azure components on behalf of a
 | Name | Description | Required |
 | --- | --- | --- |
 | `creds` | The Azure Active Directory Service Principal credentials to be used in the login process. This information has to be provided in the form of a JSON string [as indicated in this example](https://github.com/marketplace/actions/azure-login#configure-deployment-credentials). You can use <nobr>`${{ secrets.AZURE_CREDENTIALS }}`</nobr> to store the credentials in a secret named `AZURE_CREDENTIALS`. | true |
-| <nobr>`resource-url`</nobr> | Canonical resource url for what you want the token for. | false |
+| <nobr>`resource-url`</nobr> | Canonical resource url for what you want the token for. The resource class GUID can also be used as a URL. | false |
 | <nobr>`resource-type-name`</nobr> | Optional resouce type name, supported values: AadGraph, AnalysisServices, Arm, Attestation, Batch, DataLake, KeyVault, OperationalInsights, ResourceManager, Storage, Synapse. Default value is Arm if not specified. | false |
 
 ### Example usage
@@ -49,6 +49,19 @@ with:
 
 > You can use the generated token later as `${{ steps.mgnt-login.outputs.token }}`
 
+#### Get raw access token for Azure Databricks
+
+```
+id: adb-login
+name: Adquiring ADB Access Token
+uses: Azure/azure-resource-login-action@v1.0.0
+with:
+    creds: ${{ secrets.AZURE_CREDENTIALS }}
+    resource-url: 2ff814a6-3304-4ab8-85cb-cd0e6f879c1d
+```
+
+> You can use the generated token later as `${{ steps.adb-login.outputs.token }}`
+
 #### Get raw access token for AAD graph
 
 ```
@@ -59,8 +72,6 @@ with:
     creds: ${{ secrets.AZURE_CREDENTIALS }}
     resource-type-name: AadGraph
 ```
-
-> You can use the generated token later as `${{ steps.aadgraph-login.outputs.token }}`
 
 ## Contributing
 
