@@ -44,4 +44,4 @@ runs:
 
         $resourceToken = $resource.Token
         write-host "::debug::Setting 'token' variable to $resourceToken"
-        write-host "::set-output name=token::$resourceToken"
+        echo "token=$resourceToken" >> $GITHUB_OUTPUT
