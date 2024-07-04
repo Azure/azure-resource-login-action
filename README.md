@@ -28,7 +28,7 @@ Use `azure-resource-login` for intereacting with Azure components on behalf of a
 ```
 id: sql-login
 name: Adquiring SQL Access Token
-uses: Azure/azure-resource-login-action@v1.0.0
+uses: Azure/azure-resource-login-action@v1.1.0
 with:
     creds: ${{ secrets.AZURE_CREDENTIALS }}
     resource-url: "https://database.windows.net"
